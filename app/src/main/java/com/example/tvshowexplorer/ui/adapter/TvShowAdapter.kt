@@ -36,14 +36,16 @@ class TvShowAdapter(private var shows: List<TvShow>) :
             crossfade(true)
         }
 
-        // Open DetailActivity on click with EXTRA_ID passed
+        // Open DetailActivity on click with extra information
         holder.itemView.setOnClickListener { context ->
             val intent = Intent(context.context, DetailActivity::class.java).apply {
-                putExtra("EXTRA_ID", show.id) // <-- MAKE SURE THIS LINE IS HERE
+                putExtra("EXTRA_ID", show.id)
                 putExtra("EXTRA_NAME", show.name)
                 putExtra("EXTRA_RATING", show.rating?.average ?: 0.0)
                 putExtra("EXTRA_SUMMARY", show.summary)
                 putExtra("EXTRA_IMAGE", show.image?.original ?: show.image?.medium)
+                putExtra("EXTRA_STATUS", show.status)
+                putStringArrayListExtra("EXTRA_GENRES", ArrayList(show.genres ?: emptyList()))
             }
             context.context.startActivity(intent)
         }

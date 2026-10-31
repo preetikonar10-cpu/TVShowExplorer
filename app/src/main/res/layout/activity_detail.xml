@@ -38,6 +38,27 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <!-- Insert below txtDetailRating inside activity_detail.xml -->
+            <TextView
+                android:id="@+id/txtDetailGenres"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.dp"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/txtDetailStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.dp"
+                android:background="#2196F3"
+                android:paddingHorizontal="10.dp"
+                android:paddingVertical="4.dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
             <!-- Cast Section -->
             <TextView
                 android:layout_width="match_parent"
