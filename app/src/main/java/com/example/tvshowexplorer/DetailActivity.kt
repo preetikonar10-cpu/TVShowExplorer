@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.tvshowexplorer.data.repository.TvShowRepository
 import com.example.tvshowexplorer.ui.adapter.CastAdapter
+import com.example.tvshowexplorer.ui.adapter.EpisodeAdapter
 import com.example.tvshowexplorer.ui.state.UiState
 import kotlinx.coroutines.launch
 
@@ -18,6 +19,7 @@ class DetailActivity : AppCompatActivity() {
 
     private val repository = TvShowRepository()
     private lateinit var castAdapter: CastAdapter
+    private lateinit var episodeAdapter: EpisodeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,7 @@ class DetailActivity : AppCompatActivity() {
         val txtRating = findViewById<TextView>(R.id.txtDetailRating)
         val txtSummary = findViewById<TextView>(R.id.txtDetailSummary)
         val recyclerCast = findViewById<RecyclerView>(R.id.recyclerCast)
+        val recyclerEpisodes = findViewById<RecyclerView>(R.id.recyclerEpisodes)
 
         val showId = intent.getIntExtra("EXTRA_ID", -1)
         val name = intent.getStringExtra("EXTRA_NAME") ?: "N/A"
@@ -35,6 +38,7 @@ class DetailActivity : AppCompatActivity() {
         val summary = intent.getStringExtra("EXTRA_SUMMARY") ?: "No summary available."
         val imageUrl = intent.getStringExtra("EXTRA_IMAGE")
 
+        // Populate basic text views and poster image
         txtTitle.text = name
         txtRating.text = if (rating > 0.0) "⭐ $rating / 10" else "⭐ Rating N/A"
         txtSummary.text = Html.fromHtml(summary, Html.FROM_HTML_MODE_LEGACY).toString()
@@ -45,12 +49,24 @@ class DetailActivity : AppCompatActivity() {
         recyclerCast.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerCast.adapter = castAdapter
 
-        // Fetch Cast Data
+        // Setup Episode RecyclerView (Vertical Scrolling)
+        episodeAdapter = EpisodeAdapter(emptyList())
+        recyclerEpisodes.layoutManager = LinearLayoutManager(this)
+        recyclerEpisodes.adapter = episodeAdapter
+
+        // Fetch Cast & Episode Data concurrently if valid showId exists
         if (showId != -1) {
             lifecycleScope.launch {
-                when (val result = repository.fetchShowCast(showId)) {
-                    is UiState.Success -> castAdapter.updateCast(result.data)
+                // Fetch Cast members
+                when (val castResult = repository.fetchShowCast(showId)) {
+                    is UiState.Success -> castAdapter.updateCast(castResult.data)
                     else -> { /* Ignore cast loading errors */ }
+                }
+
+                // Fetch Episode list
+                when (val episodeResult = repository.fetchShowEpisodes(showId)) {
+                    is UiState.Success -> episodeAdapter.updateEpisodes(episodeResult.data)
+                    else -> { /* Ignore episode loading errors */ }
                 }
             }
         }

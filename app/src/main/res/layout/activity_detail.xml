@@ -74,6 +74,23 @@
                 android:lineSpacingExtra="4.dp"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="15sp" />
+            <!-- Add this below the Overview TextView section in activity_detail.xml -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16.dp"
+                android:text="Episodes"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerEpisodes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8.dp"
+                android:nestedScrollingEnabled="false" />
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
