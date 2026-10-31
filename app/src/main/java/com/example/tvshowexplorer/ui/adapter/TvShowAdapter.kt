@@ -46,6 +46,7 @@ class TvShowAdapter(private var shows: List<TvShow>) :
                 putExtra("EXTRA_IMAGE", show.image?.original ?: show.image?.medium)
                 putExtra("EXTRA_STATUS", show.status)
                 putStringArrayListExtra("EXTRA_GENRES", ArrayList(show.genres ?: emptyList()))
+                putExtra("EXTRA_URL", show.officialSite ?: show.url)
             }
             context.context.startActivity(intent)
         }

@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.text.Html
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.tvshowexplorer.data.api.Episode
 import com.example.tvshowexplorer.data.repository.TvShowRepository
 import com.example.tvshowexplorer.ui.adapter.CastAdapter
 import com.example.tvshowexplorer.ui.adapter.EpisodeAdapter
@@ -59,9 +61,9 @@ class DetailActivity : AppCompatActivity() {
         // Set Status Badge with dynamic colors
         txtStatus.text = status.uppercase()
         if (status.equals("Ended", ignoreCase = true)) {
-            txtStatus.setBackgroundColor(Color.parseColor("#E53935")) // Red background for Ended shows
+            txtStatus.setBackgroundColor(Color.parseColor("#E53935")) // Red background for Ended
         } else {
-            txtStatus.setBackgroundColor(Color.parseColor("#4CAF50")) // Green background for Running/Other shows
+            txtStatus.setBackgroundColor(Color.parseColor("#4CAF50")) // Green background for Running
         }
 
         // Setup Cast RecyclerView (Horizontal Scrolling)
@@ -69,9 +71,12 @@ class DetailActivity : AppCompatActivity() {
         recyclerCast.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerCast.adapter = castAdapter
 
-        // Setup Episode RecyclerView (Vertical Scrolling)
-        episodeAdapter = EpisodeAdapter(emptyList())
+        // Setup Episode RecyclerView with Dialog Click Listener
+        episodeAdapter = EpisodeAdapter(emptyList()) { episode ->
+            showEpisodeDialog(episode)
+        }
         recyclerEpisodes.layoutManager = LinearLayoutManager(this)
+        recyclerEpisodes.isNestedScrollingEnabled = false
         recyclerEpisodes.adapter = episodeAdapter
 
         // Fetch Cast & Episode Data concurrently if valid showId exists
@@ -89,6 +94,32 @@ class DetailActivity : AppCompatActivity() {
                     else -> { /* Ignore episode loading errors */ }
                 }
             }
+        }
+    }
+
+    private fun showEpisodeDialog(episode: Episode) {
+        try {
+            val view = layoutInflater.inflate(R.layout.layout_episode_bottom_sheet, null)
+
+            val txtTitle = view.findViewById<TextView>(R.id.txtBottomSheetTitle)
+            val txtMeta = view.findViewById<TextView>(R.id.txtBottomSheetMeta)
+            val txtSummary = view.findViewById<TextView>(R.id.txtBottomSheetSummary)
+
+            txtTitle?.text = episode.name
+            txtMeta?.text = "Season ${episode.season}, Episode ${episode.number} • Aired: ${episode.airdate ?: "N/A"}"
+
+            val summaryText = episode.summary ?: "No episode summary available."
+            txtSummary?.text = Html.fromHtml(summaryText, Html.FROM_HTML_MODE_LEGACY).toString()
+
+            AlertDialog.Builder(this)
+                .setView(view)
+                .setPositiveButton("Close") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8.dp"
-    android:background="@android:color/white"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     android:elevation="1.dp"
     android:orientation="horizontal"
     android:padding="12.dp">

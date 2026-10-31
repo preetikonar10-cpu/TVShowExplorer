@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tvshowexplorer.R
 import com.example.tvshowexplorer.data.api.Episode
 
-class EpisodeAdapter(private var episodes: List<Episode>) :
-    RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
+class EpisodeAdapter(
+    private var episodes: List<Episode>,
+    private val onEpisodeClick: (Episode) -> Unit
+) : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
 
     class EpisodeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtEpisodeNumber: TextView = itemView.findViewById(R.id.txtEpisodeNumber)
@@ -28,6 +30,11 @@ class EpisodeAdapter(private var episodes: List<Episode>) :
         holder.txtEpisodeNumber.text = "S${ep.season} E${ep.number}"
         holder.txtEpisodeName.text = ep.name
         holder.txtAirDate.text = "Aired: ${ep.airdate ?: "N/A"}"
+
+        // Explicitly handle and consume click events
+        holder.itemView.setOnClickListener { view ->
+            onEpisodeClick(ep)
+        }
     }
 
     override fun getItemCount(): Int = episodes.size
