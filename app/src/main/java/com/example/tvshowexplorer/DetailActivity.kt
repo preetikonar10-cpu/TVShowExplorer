@@ -1,8 +1,12 @@
 package com.example.tvshowexplorer
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -33,6 +37,7 @@ class DetailActivity : AppCompatActivity() {
         val txtRating = findViewById<TextView>(R.id.txtDetailRating)
         val txtGenres = findViewById<TextView>(R.id.txtDetailGenres)
         val txtStatus = findViewById<TextView>(R.id.txtDetailStatus)
+        val btnOfficialSite = findViewById<Button>(R.id.btnOfficialSite)
         val txtSummary = findViewById<TextView>(R.id.txtDetailSummary)
         val recyclerCast = findViewById<RecyclerView>(R.id.recyclerCast)
         val recyclerEpisodes = findViewById<RecyclerView>(R.id.recyclerEpisodes)
@@ -42,6 +47,7 @@ class DetailActivity : AppCompatActivity() {
         val rating = intent.getDoubleExtra("EXTRA_RATING", 0.0)
         val status = intent.getStringExtra("EXTRA_STATUS") ?: "Unknown"
         val genresList = intent.getStringArrayListExtra("EXTRA_GENRES")
+        val webUrl = intent.getStringExtra("EXTRA_URL")
         val summary = intent.getStringExtra("EXTRA_SUMMARY") ?: "No summary available."
         val imageUrl = intent.getStringExtra("EXTRA_IMAGE")
 
@@ -61,9 +67,20 @@ class DetailActivity : AppCompatActivity() {
         // Set Status Badge with dynamic colors
         txtStatus.text = status.uppercase()
         if (status.equals("Ended", ignoreCase = true)) {
-            txtStatus.setBackgroundColor(Color.parseColor("#E53935")) // Red background for Ended
+            txtStatus.setBackgroundColor(Color.parseColor("#E53935"))
         } else {
-            txtStatus.setBackgroundColor(Color.parseColor("#4CAF50")) // Green background for Running
+            txtStatus.setBackgroundColor(Color.parseColor("#4CAF50"))
+        }
+
+        // Website Button Intent
+        if (!webUrl.isNullOrBlank()) {
+            btnOfficialSite.visibility = View.VISIBLE
+            btnOfficialSite.setOnClickListener {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(webUrl))
+                startActivity(browserIntent)
+            }
+        } else {
+            btnOfficialSite.visibility = View.GONE
         }
 
         // Setup Cast RecyclerView (Horizontal Scrolling)
@@ -82,13 +99,11 @@ class DetailActivity : AppCompatActivity() {
         // Fetch Cast & Episode Data concurrently if valid showId exists
         if (showId != -1) {
             lifecycleScope.launch {
-                // Fetch Cast members
                 when (val castResult = repository.fetchShowCast(showId)) {
                     is UiState.Success -> castAdapter.updateCast(castResult.data)
                     else -> { /* Ignore cast loading errors */ }
                 }
 
-                // Fetch Episode list
                 when (val episodeResult = repository.fetchShowEpisodes(showId)) {
                     is UiState.Success -> episodeAdapter.updateEpisodes(episodeResult.data)
                     else -> { /* Ignore episode loading errors */ }

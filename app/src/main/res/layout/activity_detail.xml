@@ -60,6 +60,15 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/btnOfficialSite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12.dp"
+                android:text="🌐 Visit Official Website"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
             <!-- Cast Section -->
             <TextView
                 android:layout_width="match_parent"
