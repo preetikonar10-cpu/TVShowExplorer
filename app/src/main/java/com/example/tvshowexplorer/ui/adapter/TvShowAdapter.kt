@@ -36,9 +36,10 @@ class TvShowAdapter(private var shows: List<TvShow>) :
             crossfade(true)
         }
 
-        // Open DetailActivity on click
+        // Open DetailActivity on click with EXTRA_ID passed
         holder.itemView.setOnClickListener { context ->
             val intent = Intent(context.context, DetailActivity::class.java).apply {
+                putExtra("EXTRA_ID", show.id) // <-- MAKE SURE THIS LINE IS HERE
                 putExtra("EXTRA_NAME", show.name)
                 putExtra("EXTRA_RATING", show.rating?.average ?: 0.0)
                 putExtra("EXTRA_SUMMARY", show.summary)
