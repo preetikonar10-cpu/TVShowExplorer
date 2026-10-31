@@ -4,9 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
-    app:strokeWidth="0dp">
+    app:strokeColor="#EAEAEA"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp">
+            android:layout_height="230dp">
 
             <ImageView
                 android:id="@+id/imgPoster"
@@ -23,18 +24,19 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
 
+            <!-- Rating Chip -->
             <TextView
                 android:id="@+id/txtRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="8dp"
-                android:background="#CC000000"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
+                android:layout_margin="10dp"
+                android:background="#DD000000"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
                 android:textColor="#FFC107"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -44,8 +46,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:padding="10dp"
-            android:textColor="@android:color/black"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp"
+            android:textColor="#212121"
             android:textSize="14sp"
             android:textStyle="bold" />
 

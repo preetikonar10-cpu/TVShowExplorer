@@ -3,27 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#F8F9FA"
     android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
+    <!-- Top Header Banner (Sleek Dark Theme) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="3dp"
-        app:strokeWidth="0dp">
+        android:background="#121212"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎬 TV Show Explorer"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Explore popular shows, cast &amp; episodes"
+            android:textColor="#B0BEC5"
+            android:textSize="13sp" />
+
+        <!-- Search Bar with Crisp White Card Surface -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:iconifiedByDefault="false"
-            android:queryBackground="@android:color/transparent"
-            android:queryHint="Search TV shows..." />
-    </com.google.android.material.card.MaterialCardView>
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="Search TV shows..." />
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -56,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:padding="6dp" />
+                android:padding="8dp" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </RelativeLayout>
 </LinearLayout>
