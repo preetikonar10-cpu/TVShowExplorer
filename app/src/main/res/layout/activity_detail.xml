@@ -60,14 +60,33 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnOfficialSite"
+            <!-- Action Buttons Layout -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12.dp"
-                android:text="🌐 Visit Official Website"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnOfficialSite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:text="🌐 Website"
+                    android:textColor="@android:color/white"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btnShareShow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FF9800"
+                    android:text="📤 Share Show"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
 
             <!-- Cast Section -->
             <TextView

@@ -38,6 +38,7 @@ class DetailActivity : AppCompatActivity() {
         val txtGenres = findViewById<TextView>(R.id.txtDetailGenres)
         val txtStatus = findViewById<TextView>(R.id.txtDetailStatus)
         val btnOfficialSite = findViewById<Button>(R.id.btnOfficialSite)
+        val btnShare = findViewById<Button>(R.id.btnShareShow)
         val txtSummary = findViewById<TextView>(R.id.txtDetailSummary)
         val recyclerCast = findViewById<RecyclerView>(R.id.recyclerCast)
         val recyclerEpisodes = findViewById<RecyclerView>(R.id.recyclerEpisodes)
@@ -81,6 +82,26 @@ class DetailActivity : AppCompatActivity() {
             }
         } else {
             btnOfficialSite.visibility = View.GONE
+        }
+
+        // Share Button Intent
+        btnShare.setOnClickListener {
+            val shareMessage = """
+                Check out this TV Show on TV Show Explorer!
+                
+                📺 Show: $name
+                ⭐ Rating: ${if (rating > 0.0) "$rating / 10" else "N/A"}
+                🏷️ Status: $status
+                ${if (!webUrl.isNullOrBlank()) "🔗 Link: $webUrl" else ""}
+            """.trimIndent()
+
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, "Check out $name")
+                putExtra(Intent.EXTRA_TEXT, shareMessage)
+            }
+
+            startActivity(Intent.createChooser(shareIntent, "Share show via"))
         }
 
         // Setup Cast RecyclerView (Horizontal Scrolling)
