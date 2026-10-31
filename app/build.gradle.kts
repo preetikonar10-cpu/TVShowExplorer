@@ -44,6 +44,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // Networking - Retrofit & Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.tvshowexplorer.data.model.TvShow
 import com.example.tvshowexplorer.data.repository.TvShowRepository
 import com.example.tvshowexplorer.ui.adapter.TvShowAdapter
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var txtError: TextView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var adapter: TvShowAdapter
     private val repository = TvShowRepository()
     private var searchJob: Job? = null
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         progressBar = findViewById(R.id.progressBar)
         txtError = findViewById(R.id.txtError)
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
 
         adapter = TvShowAdapter(emptyList())
         recyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -45,16 +48,27 @@ class MainActivity : AppCompatActivity() {
 
         // Setup real-time search listener with debouncing
         setupSearch()
+
+        // Setup Pull-to-Refresh
+        swipeRefreshLayout.setOnRefreshListener {
+            val currentQuery = searchView.query.toString()
+            if (currentQuery.isBlank()) {
+                fetchPopularShows()
+            } else {
+                performSearch(currentQuery)
+            }
+        }
     }
 
     private fun fetchPopularShows() {
         lifecycleScope.launch {
-            showLoading()
+            if (!swipeRefreshLayout.isRefreshing) showLoading()
             when (val result = repository.fetchPopularShows()) {
                 is UiState.Success -> showData(result.data)
                 is UiState.Error -> showError(result.message)
                 is UiState.Loading -> showLoading()
             }
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -70,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 searchJob?.cancel()
                 searchJob = lifecycleScope.launch {
-                    delay(500) // Wait 500ms after user stops typing
+                    delay(500) // 500ms debounce
                     if (newText.isNullOrBlank()) {
                         fetchPopularShows()
                     } else {
@@ -84,11 +98,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun performSearch(query: String) {
         lifecycleScope.launch {
-            showLoading()
+            if (!swipeRefreshLayout.isRefreshing) showLoading()
             when (val result = repository.searchShows(query)) {
                 is UiState.Success -> {
                     if (result.data.isEmpty()) {
-                        showError("No shows found for '$query'")
+                        showError("No TV shows found for '$query'")
                     } else {
                         showData(result.data)
                     }
@@ -96,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                 is UiState.Error -> showError(result.message)
                 is UiState.Loading -> showLoading()
             }
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
