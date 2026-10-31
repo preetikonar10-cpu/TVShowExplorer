@@ -43,20 +43,25 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
 
-        // Fetch initial popular shows
+        // Fetch popular shows on launch
         fetchPopularShows()
 
-        // Setup real-time search listener with debouncing
+        // Setup real-time search listener
         setupSearch()
 
         // Setup Pull-to-Refresh
         swipeRefreshLayout.setOnRefreshListener {
-            val currentQuery = searchView.query.toString()
-            if (currentQuery.isBlank()) {
+            val currentQuery = searchView.query.toString().trim()
+            if (currentQuery.isEmpty()) {
                 fetchPopularShows()
             } else {
                 performSearch(currentQuery)
             }
+        }
+        // Add this inside onCreate() right after initializing searchView:
+        searchView.setOnClickListener {
+            searchView.isIconified = false
+            searchView.requestFocus()
         }
     }
 
@@ -75,9 +80,11 @@ class MainActivity : AppCompatActivity() {
     private fun setupSearch() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrBlank()) {
-                    performSearch(query)
+                val cleanQuery = query?.trim().orEmpty()
+                if (cleanQuery.isNotEmpty()) {
+                    performSearch(cleanQuery)
                 }
+                searchView.clearFocus()
                 return true
             }
 
@@ -85,10 +92,11 @@ class MainActivity : AppCompatActivity() {
                 searchJob?.cancel()
                 searchJob = lifecycleScope.launch {
                     delay(500) // 500ms debounce
-                    if (newText.isNullOrBlank()) {
+                    val cleanText = newText?.trim().orEmpty()
+                    if (cleanText.isEmpty()) {
                         fetchPopularShows()
                     } else {
-                        performSearch(newText)
+                        performSearch(cleanText)
                     }
                 }
                 return true
